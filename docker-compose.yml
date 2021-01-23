@@ -37,15 +37,6 @@ services:
     command: --schedule "0 0 6 * * *" --label-enable --cleanup
     restart: unless-stopped
 
-  ddclient:
-    image: linuxserver/ddclient
-    container_name: ddclient
-    volumes:
-      - ${CONFIG}/ddclient:/config
-    labels:
-      com.centurylinklabs.watchtower.enable: "true"
-    restart: unless-stopped
-
   sabnzbd:
     image: linuxserver/sabnzbd:latest
     container_name: sabnzbd
@@ -114,72 +105,6 @@ services:
       com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
 
-  lidarr:
-    image: linuxserver/lidarr:latest
-    container_name: lidarr
-    hostname: lidarr
-    ports:
-      - "8686:8686"
-    volumes:
-      - ${CONFIG}/lidarr:/config
-      - /etc/localtime:/etc/localtime:ro
-      - ${DOWNLOAD}/complete:/downloads
-      - ${DATA}/music:/music
-    environment:
-      - PGID
-      - PUID
-    labels:
-      traefik.enable: "true"
-      traefik.port: "8686"
-      traefik.frontend.rule: "Host:lidarr.${DOMAIN}"
-      traefik.frontend.auth.basic: "${HTPASSWD}"
-      com.centurylinklabs.watchtower.enable: "true"
-    restart: unless-stopped
-
-  lazylibrarian:
-    image: linuxserver/lazylibrarian:latest
-    container_name: lazylibrarian
-    hostname: lazylibrarian
-    ports:
-      - "5299:5299"
-    volumes:
-      - ${CONFIG}/lazylibrarian:/config
-      - ${DOWNLOAD}/complete:/downloads
-      - ${DATA}/books:/books
-    environment:
-      - PGID
-      - PUID
-      - TZ
-    labels:
-      traefik.enable: "true"
-      traefik.port: "5299"
-      traefik.frontend.rule: "Host:lazylibrarian.${DOMAIN}"
-      traefik.frontend.auth.basic: "${HTPASSWD}"
-      com.centurylinklabs.watchtower.enable: "true"
-    restart: unless-stopped
-
-  mylar:
-    image: linuxserver/mylar:latest
-    container_name: mylar
-    hostname: mylar
-    ports:
-      - "8090:8090"
-    volumes:
-      - ${CONFIG}/mylar:/config
-      - ${DOWNLOAD}/complete:/downloads
-      - ${DATA}/comics:/comics
-    environment:
-      - PGID
-      - PUID
-      - TZ
-    labels:
-      traefik.enable: "true"
-      traefik.port: "8090"
-      traefik.frontend.rule: "Host:mylar.${DOMAIN}"
-      traefik.frontend.auth.basic: "${HTPASSWD}"
-      com.centurylinklabs.watchtower.enable: "true"
-    restart: unless-stopped
-
   nzbhydra:
     image: linuxserver/nzbhydra2:latest
     container_name: nzbhydra
@@ -229,27 +154,6 @@ services:
       com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
 
-  plexpy:
-    image: linuxserver/tautulli:latest
-    container_name: tautulli
-    hostname: tautulli
-    ports:
-      - "8181:8181"
-    volumes:
-      - ${CONFIG}/plexpy:/config
-      - ${CONFIG}/plex/Library/Application Support/Plex Media Server/Logs:/logs:ro
-    environment:
-      - PGID
-      - PUID
-      - TZ
-    labels:
-      traefik.enable: "true"
-      traefik.port: "8181"
-      traefik.frontend.rule: "Host:tautulli.${DOMAIN}"
-      traefik.frontend.auth.basic: "${HTPASSWD}"
-      com.centurylinklabs.watchtower.enable: "true"
-    restart: unless-stopped
-
   heimdall:
     image: linuxserver/heimdall:latest
     container_name: heimdall
@@ -286,24 +190,4 @@ services:
       traefik.frontend.rule: "Host:ombi.${DOMAIN}"
       com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
-
-  flexget:
-    image: cpoppema/docker-flexget
-    container_name: flexget
-    hostname: flexget
-    ports:
-      - "5050:5050"
-    volumes:
-      - ${CONFIG}/flexget:/config
-      - ${DOWNLOAD}/watch:/watch
-    environment:
-      - PGID
-      - PUID
-      - WEB_PASSWD=pNTgQj4hfJPPiGVFt9re
-    labels:
-      traefik.enable: "true"
-      traefik.port: "5050"
-      traefik.frontend.rule: "Host:flexget.${DOMAIN}"
-      traefik.frontend.auth.basic: "${HTPASSWD}"
-      com.centurylinklabs.watchtower.enable: "true"
-    restart: unless-stopped
+  
