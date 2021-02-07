@@ -190,4 +190,25 @@ services:
       traefik.frontend.rule: "Host:ombi.${DOMAIN}"
       com.centurylinklabs.watchtower.enable: "true"
     restart: unless-stopped
-  
+
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    container_name: bazarr
+    hostname: bazarr
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    volumes:
+      - ${CONFIG}/bazarr:/config
+      - ${DATA}/tv:/tv
+      - ${DATA}/movies:/movies
+    ports:
+      - 6767:6767
+    labels:
+      traefik.enable: "true"
+      traefik.port: "6767"
+      traefik.frontend.rule: "Host:bazarr.${DOMAIN}"
+      traefik.frontend.auth.basic: "${HTPASSWD}"
+      com.centurylinklabs.watchtower.enable: "true"
+    restart: unless-stopped  
