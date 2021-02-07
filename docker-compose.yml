@@ -211,4 +211,4 @@ services:
       traefik.frontend.rule: "Host:bazarr.${DOMAIN}"
       traefik.frontend.auth.basic: "${HTPASSWD}"
       com.centurylinklabs.watchtower.enable: "true"
-    restart: unless-stopped  
+    restart: unless-stopped 
