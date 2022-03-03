@@ -46,8 +46,8 @@ services:
     volumes:
       - ${CONFIG}/sabnzbd:/config
       - ${DOWNLOAD}/complete:/downloads
-      - ${DOWNLOAD_SSD}/incomplete:/incomplete-downloads
-      - ${DOWNLOAD_SSD}/watch:/watch
+      - ${DOWNLOAD}/incomplete:/incomplete-downloads
+      - ${DOWNLOAD}/watch:/watch
     environment:
       - PGID
       - PUID
