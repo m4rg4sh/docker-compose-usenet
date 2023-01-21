@@ -41,8 +41,6 @@ services:
     image: linuxserver/sabnzbd:latest
     container_name: sabnzbd
     hostname: sabnzbd
-    ports:
-      - "8080:8080"
     volumes:
       - ${CONFIG}/sabnzbd:/config
       - ${DOWNLOAD}/complete:/downloads
@@ -64,8 +62,6 @@ services:
     image: linuxserver/sonarr:latest
     container_name: sonarr
     hostname: sonarr
-    ports:
-      - "8989:8989"
     volumes:
       - ${CONFIG}/sonarr:/config
       - ${DOWNLOAD}/complete:/downloads
@@ -87,8 +83,6 @@ services:
     image: linuxserver/radarr:latest
     container_name: radarr
     hostname: radarr
-    ports:
-      - "7878:7878"
     volumes:
       - ${CONFIG}/radarr:/config
       - ${DOWNLOAD}/complete:/downloads
@@ -109,8 +103,6 @@ services:
     image: linuxserver/nzbhydra2:latest
     container_name: nzbhydra
     hostname: nzbhydra
-    ports:
-      - "5076:5076"
     volumes:
       - ${CONFIG}/nzbhydra2:/config
       - ${DOWNLOAD}/complete:/downloads
@@ -132,10 +124,6 @@ services:
     hostname: plex
     ports:
       - "32400:32400"
-      - "32400:32400/udp"
-      - "32469:32469"
-      - "32469:32469/udp"
-      - "1900:1900/udp"
     volumes:
       - ${CONFIG}/plex:/config
       - ${DATA}/tv:/media/tv
@@ -177,8 +165,6 @@ services:
     image: linuxserver/ombi
     container_name: ombi
     hostname: ombi
-    ports:
-      - "3579:3579"
     volumes:
       - ${CONFIG}/ombi:/config
     environment:
@@ -204,8 +190,6 @@ services:
       - ${CONFIG}/bazarr:/config
       - ${DATA}/tv:/tv
       - ${DATA}/movies:/movies
-    ports:
-      - 6767:6767
     labels:
       traefik.enable: "true"
       traefik.port: "6767"
