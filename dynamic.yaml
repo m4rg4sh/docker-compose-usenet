@@ -1,0 +1,6 @@
+http:
+  middlewares:
+    auth:
+      basicAuth:
+        users:
+          - {{ env "HTPASSWD" }}

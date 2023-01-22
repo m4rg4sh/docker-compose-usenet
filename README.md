@@ -46,7 +46,7 @@ Values for User ID (PUID) and Group ID (PGID) can be found by running `id user` 
 
 1. Create a folder called `traefik` in your chosen config directory. Everything below should be executed inside the `traefik` directory
 2. Run `touch acme.json; chmod 600 acme.json`
-3. Copy `traefik.toml` to the `traefik` directory in your config folder and replace the example email with your own
+3. Copy `traefik.yaml` and `dynamic.yaml` to the `traefik` directory in your config folder and replace the example email with your own
 
 #### DDClient
 

@@ -1,0 +1,162 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.9
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${CONFIG}/traefik/traefik.yaml:/etc/traefik/traefik.yaml
+      - ${CONFIG}/traefik/dynamic.yaml:/etc/traefik/dynamic.yaml
+      - ${CONFIG}/traefik/acme.json:/acme.json
+    environment:
+      - HTPASSWD
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.api.service=api@internal
+      - traefik.http.routers.api.tls=true
+      - traefik.http.routers.api.middlewares=auth@file
+    restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --schedule "0 34 4 * * *" --cleanup
+    restart: unless-stopped
+
+  heimdall:
+    image: linuxserver/heimdall:latest
+    volumes:
+      - ${CONFIG}/heimdall:/config
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.heimdall.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.heimdall.tls=true
+      - traefik.http.routers.heimdall.middlewares=auth@file
+    restart: unless-stopped
+
+  sabnzbd:
+    image: linuxserver/sabnzbd:latest
+    volumes:
+      - ${CONFIG}/sabnzbd:/config
+      - ${DOWNLOAD}/complete:/downloads
+      - ${DOWNLOAD}/incomplete:/incomplete-downloads
+      - ${DOWNLOAD}/watch:/watch
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.${DOMAIN}`)
+      - traefik.http.routers.sabnzbd.tls=true
+      - traefik.http.routers.sabnzbd.middlewares=auth@file
+    restart: unless-stopped
+
+  sonarr:
+    image: linuxserver/sonarr:latest
+    volumes:
+      - ${CONFIG}/sonarr:/config
+      - ${DOWNLOAD}/complete:/downloads
+      - ${DATA}/tv:/tv
+      - ${DATA}/anime:/anime
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)
+      - traefik.http.routers.sonarr.tls=true
+      - traefik.http.routers.sonarr.middlewares=auth@file
+    restart: unless-stopped
+
+  radarr:
+    image: linuxserver/radarr:latest
+    volumes:
+      - ${CONFIG}/radarr:/config
+      - ${DOWNLOAD}/complete:/downloads
+      - ${DATA}/movies:/movies
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
+      - traefik.http.routers.radarr.tls=true
+      - traefik.http.routers.radarr.middlewares=auth@file
+    restart: unless-stopped
+
+  nzbhydra:
+    image: linuxserver/nzbhydra2:latest
+    volumes:
+      - ${CONFIG}/nzbhydra2:/config
+      - ${DOWNLOAD}/complete:/downloads
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nzbhydra.rule=Host(`nzbhydra.${DOMAIN}`)
+      - traefik.http.routers.nzbhydra.tls=true
+      - traefik.http.routers.nzbhydra.middlewares=auth@file
+    restart: unless-stopped
+
+  plex:
+    image: linuxserver/plex
+    ports:
+      - "32400:32400"
+    volumes:
+      - ${CONFIG}/plex:/config
+      - ${DATA}/tv:/media/tv
+      - ${DATA}/movies:/media/movies
+      - ${DATA}/music:/media/music
+      - ${DATA}/anime:/media/anime
+      - ${DATA}/photos:/media/photos
+    environment:
+      - PGID
+      - PUID
+      - TZ
+      - VERSION=latest
+    restart: unless-stopped
+
+  ombi:
+    image: linuxserver/ombi
+    volumes:
+      - ${CONFIG}/ombi:/config
+    environment:
+      - PGID
+      - PUID
+      - TZ
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ombi.rule=Host(`ombi.${DOMAIN}`)
+      - traefik.http.routers.ombi.tls=true
+    restart: unless-stopped
+
+  bazarr:
+    image: ghcr.io/linuxserver/bazarr
+    environment:
+      - PUID
+      - PGID
+      - TZ
+    volumes:
+      - ${CONFIG}/bazarr:/config
+      - ${DATA}/tv:/tv
+      - ${DATA}/movies:/movies
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)
+      - traefik.http.routers.bazarr.tls=true
+      - traefik.http.routers.bazarr.middlewares=auth@file
+    restart: unless-stopped
