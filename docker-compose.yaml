@@ -165,3 +165,11 @@ services:
       - traefik.http.routers.bazarr.tls.certresolver=letsencrypt
       - traefik.http.routers.bazarr.middlewares=auth@file
     restart: unless-stopped
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr
+    user: ${PUID}:${PGID}
+    volumes:
+      - ${CONFIG}/recyclarr:/config
+    environment:
+      - TZ
