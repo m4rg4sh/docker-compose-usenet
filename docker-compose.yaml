@@ -78,7 +78,6 @@ services:
       - traefik.http.routers.sonarr.rule=Host(`sonarr.${DOMAIN}`)
       - traefik.http.routers.sonarr.tls=true
       - traefik.http.routers.sonarr.tls.certresolver=letsencrypt
-      - traefik.http.routers.sonarr.middlewares=auth@file
     restart: unless-stopped
 
   radarr:
@@ -95,7 +94,6 @@ services:
       - traefik.http.routers.radarr.rule=Host(`radarr.${DOMAIN}`)
       - traefik.http.routers.radarr.tls=true
       - traefik.http.routers.radarr.tls.certresolver=letsencrypt
-      - traefik.http.routers.radarr.middlewares=auth@file
     restart: unless-stopped
 
   nzbhydra:
