@@ -1,4 +1,4 @@
-version: '3'
+version: '2.4'
 
 services:
   traefik:
@@ -132,7 +132,7 @@ services:
     restart: unless-stopped
 
   ombi:
-    image: linuxserver/ombi
+    image: linuxserver/ombi:development
     volumes:
       - ${CONFIG}/ombi:/config
     environment:
@@ -171,3 +171,10 @@ services:
       - ${CONFIG}/recyclarr:/config
     environment:
       - TZ
+
+networks:
+  default:
+    enable_ipv6: true
+    ipam:
+        config:
+            - subnet: "${IPV6_SUBNET}"
